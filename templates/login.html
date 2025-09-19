@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                    url('https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+    
+    .login-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        background-color: rgba(255, 255, 255, 0.85);
+        border: none;
+    }
+    
+    .login-header {
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+    
+    .login-body {
+        padding: 2rem;
+    }
+    
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-right: none;
+    }
+    
+    .form-control {
+        border-left: none;
+    }
+    
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #ced4da;
+    }
+    
+    .btn-login {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border: none;
+        padding: 10px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s;
+    }
+    
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .register-link {
+        color: #4e73df;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .register-link:hover {
+        color: #224abe;
+        text-decoration: none;
+    }
+    
+    .brand-logo {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .brand-text {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-md-6 col-lg-4">
+            <div class="card login-card">
+                <div class="card-header login-header text-center text-white">
+                    <div class="brand-logo">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h4 class="mb-0">Cloud Task Priority</h4>
+                    <div class="brand-text">Intelligent Task Management</div>
+                </div>
+                <div class="card-body login-body">
+                    <form method="POST" action="{{ url_for('login') }}">
+                        <div class="mb-4">
+                            <label for="username" class="form-label fw-bold">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" required
+                                       placeholder="Enter your username">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-bold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" required
+                                       placeholder="Enter your password">
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary btn-login">
+                                <i class="fas fa-sign-in-alt me-2"></i> Login
+                            </button>
+                        </div>
+                        <div class="text-center">
+                            <a href="#" class="text-muted small">Forgot password?</a>
+                        </div>
+                    </form>
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <span class="text-muted">Don't have an account?</span>
+                        <a href="{{ url_for('register') }}" class="register-link ms-2">
+                            <i class="fas fa-user-plus me-1"></i> Register
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <small class="text-white">
+                    &copy; 2023 Cloud Task Priority System | 
+                    <a href="#" class="text-white">Terms</a> | 
+                    <a href="#" class="text-white">Privacy</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Floating clouds animation -->
+<div class="position-fixed top-0 start-0 w-100 h-100" style="pointer-events: none; z-index: -1;">
+    <div class="cloud" style="top: 20%; left: 10%; animation: float 15s infinite linear;"></div>
+    <div class="cloud" style="top: 50%; left: 70%; animation: float 20s infinite linear reverse;"></div>
+    <div class="cloud" style="top: 70%; left: 30%; animation: float 25s infinite linear;"></div>
+</div>
+
+<style>
+    .cloud {
+        position: absolute;
+        width: 150px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50px;
+        filter: blur(5px);
+    }
+    
+    .cloud:before, .cloud:after {
+        content: '';
+        position: absolute;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        filter: blur(5px);
+    }
+    
+    .cloud:before {
+        width: 50px;
+        height: 50px;
+        top: -15px;
+        left: 20px;
+    }
+    
+    .cloud:after {
+        width: 30px;
+        height: 30px;
+        top: -10px;
+        right: 20px;
+    }
+    
+    @keyframes float {
+        0% { transform: translateX(0) translateY(0); }
+        50% { transform: translateX(50px) translateY(-20px); }
+        100% { transform: translateX(0) translateY(0); }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                    url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+    
+    .register-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        background-color: rgba(255, 255, 255, 0.85);
+        border: none;
+        transition: transform 0.3s ease;
+    }
+    
+    .register-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .register-header {
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+    
+    .register-body {
+        padding: 2rem;
+    }
+    
+    .form-control {
+        border-left: 3px solid #4e73df;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        border-left: 3px solid #224abe;
+    }
+    
+    .input-icon {
+        position: relative;
+    }
+    
+    .input-icon i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #4e73df;
+    }
+    
+    .input-icon input {
+        padding-left: 40px;
+    }
+    
+    .btn-register {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s;
+        text-transform: uppercase;
+    }
+    
+    .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .login-link {
+        color: #4e73df;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .login-link:hover {
+        color: #224abe;
+        text-decoration: none;
+    }
+    
+    .brand-logo {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .brand-text {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    
+    .password-strength {
+        height: 5px;
+        margin-top: 5px;
+        background: #e9ecef;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    
+    .strength-meter {
+        height: 100%;
+        width: 0%;
+        transition: width 0.3s;
+    }
+    
+    /* Floating particles animation */
+    .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+    }
+    
+    .particle {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        animation: float-up linear infinite;
+    }
+    
+    @keyframes float-up {
+        0% {
+            transform: translateY(100vh) scale(0);
+            opacity: 0;
+        }
+        20% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-20vh) scale(1);
+            opacity: 0;
+        }
+    }
+</style>
+
+<!-- Floating particles background -->
+<div class="particles" id="particles-js"></div>
+
+<div class="container">
+    <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="col-md-8 col-lg-6 col-xl-5">
+            <div class="card register-card">
+                <div class="card-header register-header text-center text-white">
+                    <div class="brand-logo">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h4 class="mb-0">Create Your Account</h4>
+                    <div class="brand-text">Join our cloud task management system</div>
+                </div>
+                <div class="card-body register-body">
+                    <form method="POST" action="{{ url_for('register') }}">
+                        <div class="mb-4">
+                            <label for="username" class="form-label fw-bold">Username</label>
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" class="form-control" id="username" name="username" required
+                                       placeholder="Choose a username">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-bold">Password</label>
+                            <div class="input-icon">
+                                <i class="fas fa-key"></i>
+                                <input type="password" class="form-control" id="password" name="password" required
+                                       placeholder="Create a password">
+                            </div>
+                            <div class="password-strength mt-2">
+                                <div class="strength-meter" id="password-strength"></div>
+                            </div>
+                            <small class="text-muted">Use 8 or more characters with a mix of letters, numbers & symbols</small>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="name" class="form-label fw-bold">Full Name</label>
+                            <div class="input-icon">
+                                <i class="fas fa-id-card"></i>
+                                <input type="text" class="form-control" id="name" name="name" required
+                                       placeholder="Your full name">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="email" class="form-label fw-bold">Email Address</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" class="form-control" id="email" name="email" required
+                                       placeholder="your@email.com">
+                            </div>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary btn-register">
+                                <i class="fas fa-user-plus me-2"></i> Create Account
+                            </button>
+                        </div>
+                        
+                        <div class="text-center mt-4 pt-3 border-top">
+                            <span class="text-muted">Already have an account?</span>
+                            <a href="{{ url_for('login') }}" class="login-link ms-2">
+                                <i class="fas fa-sign-in-alt me-1"></i> Sign In
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <small class="text-white">
+                    &copy; 2023 Cloud Task Priority System | 
+                    <a href="#" class="text-white">Terms</a> | 
+                    <a href="#" class="text-white">Privacy</a>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Password strength indicator
+    document.getElementById('password').addEventListener('input', function() {
+        const password = this.value;
+        const strengthMeter = document.getElementById('password-strength');
+        let strength = 0;
+        
+        // Check for length
+        if (password.length >= 8) strength += 1;
+        if (password.length >= 12) strength += 1;
+        
+        // Check for uppercase letters
+        if (/[A-Z]/.test(password)) strength += 1;
+        
+        // Check for numbers
+        if (/[0-9]/.test(password)) strength += 1;
+        
+        // Check for special characters
+        if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+        
+        // Update strength meter
+        const width = (strength / 5) * 100;
+        strengthMeter.style.width = width + '%';
+        
+        // Update color based on strength
+        if (width < 40) {
+            strengthMeter.style.backgroundColor = '#dc3545'; // Red
+        } else if (width < 70) {
+            strengthMeter.style.backgroundColor = '#ffc107'; // Yellow
+        } else {
+            strengthMeter.style.backgroundColor = '#28a745'; // Green
+        }
+    });
+    
+    // Create floating particles
+    function createParticles() {
+        const particlesContainer = document.getElementById('particles-js');
+        const particleCount = 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random size between 2px and 8px
+            const size = Math.random() * 6 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            
+            // Random animation duration between 10s and 20s
+            const duration = Math.random() * 10 + 10;
+            particle.style.animationDuration = `${duration}s`;
+            
+            // Random delay
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+    }
+    
+    // Initialize particles when page loads
+    window.addEventListener('load', createParticles);
+</script>
+{% endblock %}

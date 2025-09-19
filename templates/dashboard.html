@@ -1,0 +1,693 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">
+        <i class="fas fa-cloud me-2 text-primary"></i>Cloud Task Priority Dashboard
+        <small class="text-muted fs-6">Real-time task analysis</small>
+    </h1>
+    <div class="btn-group me-2">
+    <a href="{{ url_for('refresh') }}" class="btn btn-sm btn-primary">
+        <i class="fas fa-sync-alt me-1"></i> Refresh Dashboard
+    </a>
+    <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#manualTaskModal">
+        <i class="fas fa-plus me-1"></i> Add Task
+    </button>
+    <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#helpModal">
+        <i class="fas fa-question-circle me-1"></i> Help
+    </button>
+</div>
+</div>
+
+<!-- Replace the existing manualTaskModal with this -->
+<div class="modal fade" id="manualTaskModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus-circle me-2"></i>Add Manual Tasks
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('add_manual_task') }}">
+                <div class="modal-body">
+                    <ul class="nav nav-tabs mb-4" id="taskTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="task1-tab" data-bs-toggle="tab" data-bs-target="#task1" type="button">Task 1</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="task2-tab" data-bs-toggle="tab" data-bs-target="#task2" type="button">Task 2</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="task3-tab" data-bs-toggle="tab" data-bs-target="#task3" type="button">Task 3</button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="taskTabsContent">
+                        <!-- Task 1 -->
+                        <div class="tab-pane fade show active" id="task1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Task Type</label>
+                                        <select class="form-select" name="task1_task_type" required>
+                                            <option value="">Select Task Type</option>
+                                            <option value="Data Processing">Data Processing</option>
+                                            <option value="Web Service">Web Service</option>
+                                            <option value="Batch Job">Batch Job</option>
+                                            <option value="Machine Learning">Machine Learning</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">User Type</label>
+                                        <select class="form-select" name="task1_user_type" required>
+                                            <option value="">Select User Type</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="Power User">Power User</option>
+                                            <option value="Regular User">Regular User</option>
+                                            <option value="System">System</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Resource Class</label>
+                                        <select class="form-select" name="task1_resource_class" required>
+                                            <option value="">Select Resource Class</option>
+                                            <option value="High CPU">High CPU</option>
+                                            <option value="High Memory">High Memory</option>
+                                            <option value="General Purpose">General Purpose</option>
+                                            <option value="GPU Accelerated">GPU Accelerated</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">CPU Requirement (GHz)</label>
+                                        <input type="number" class="form-control" name="task1_cpu_ghz" min="0.1" step="0.1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Memory (MB)</label>
+                                        <input type="number" class="form-control" name="task1_memory_mb" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Bandwidth (Mbps)</label>
+                                        <input type="number" class="form-control" name="task1_bandwidth_mbps" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Disk IO (MBps)</label>
+                                        <input type="number" class="form-control" name="task1_disk_io" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Runtime Estimate (sec)</label>
+                                        <input type="number" class="form-control" name="task1_runtime_sec" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Submission Hour (0-23)</label>
+                                        <input type="number" class="form-control" name="task1_submission_hour" min="0" max="23" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Deadline (sec)</label>
+                                        <input type="number" class="form-control" name="task1_deadline_sec" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Retry Count</label>
+                                        <input type="number" class="form-control" name="task1_retry_count" min="0" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Task Size (MB)</label>
+                                        <input type="number" class="form-control" name="task1_task_size_mb" min="1" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Network Latency (ms)</label>
+                                        <input type="number" class="form-control" name="task1_network_latency" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Task 2 (same structure as Task 1) -->
+                        <div class="tab-pane fade" id="task2" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Task Type</label>
+                                        <select class="form-select" name="task2_task_type" required>
+                                            <option value="">Select Task Type</option>
+                                            <option value="Data Processing">Data Processing</option>
+                                            <option value="Web Service">Web Service</option>
+                                            <option value="Batch Job">Batch Job</option>
+                                            <option value="Machine Learning">Machine Learning</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">User Type</label>
+                                        <select class="form-select" name="task2_user_type" required>
+                                            <option value="">Select User Type</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="Power User">Power User</option>
+                                            <option value="Regular User">Regular User</option>
+                                            <option value="System">System</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Resource Class</label>
+                                        <select class="form-select" name="task2_resource_class" required>
+                                            <option value="">Select Resource Class</option>
+                                            <option value="High CPU">High CPU</option>
+                                            <option value="High Memory">High Memory</option>
+                                            <option value="General Purpose">General Purpose</option>
+                                            <option value="GPU Accelerated">GPU Accelerated</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">CPU Requirement (GHz)</label>
+                                        <input type="number" class="form-control" name="task2_cpu_ghz" min="0.1" step="0.1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Memory (MB)</label>
+                                        <input type="number" class="form-control" name="task2_memory_mb" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Bandwidth (Mbps)</label>
+                                        <input type="number" class="form-control" name="task2_bandwidth_mbps" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Disk IO (MBps)</label>
+                                        <input type="number" class="form-control" name="task2_disk_io" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Runtime Estimate (sec)</label>
+                                        <input type="number" class="form-control" name="task2_runtime_sec" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Submission Hour (0-23)</label>
+                                        <input type="number" class="form-control" name="task2_submission_hour" min="0" max="23" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Deadline (sec)</label>
+                                        <input type="number" class="form-control" name="task2_deadline_sec" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Retry Count</label>
+                                        <input type="number" class="form-control" name="task2_retry_count" min="0" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Task Size (MB)</label>
+                                        <input type="number" class="form-control" name="task2_task_size_mb" min="1" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Network Latency (ms)</label>
+                                        <input type="number" class="form-control" name="task2_network_latency" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Task 3 (same structure as Task 1) -->
+                        <div class="tab-pane fade" id="task3" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Task Type</label>
+                                        <select class="form-select" name="task3_task_type" required>
+                                            <option value="">Select Task Type</option>
+                                            <option value="Data Processing">Data Processing</option>
+                                            <option value="Web Service">Web Service</option>
+                                            <option value="Batch Job">Batch Job</option>
+                                            <option value="Machine Learning">Machine Learning</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">User Type</label>
+                                        <select class="form-select" name="task3_user_type" required>
+                                            <option value="">Select User Type</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="Power User">Power User</option>
+                                            <option value="Regular User">Regular User</option>
+                                            <option value="System">System</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Resource Class</label>
+                                        <select class="form-select" name="task3_resource_class" required>
+                                            <option value="">Select Resource Class</option>
+                                            <option value="High CPU">High CPU</option>
+                                            <option value="High Memory">High Memory</option>
+                                            <option value="General Purpose">General Purpose</option>
+                                            <option value="GPU Accelerated">GPU Accelerated</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">CPU Requirement (GHz)</label>
+                                        <input type="number" class="form-control" name="task3_cpu_ghz" min="0.1" step="0.1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Memory (MB)</label>
+                                        <input type="number" class="form-control" name="task3_memory_mb" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Bandwidth (Mbps)</label>
+                                        <input type="number" class="form-control" name="task3_bandwidth_mbps" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Disk IO (MBps)</label>
+                                        <input type="number" class="form-control" name="task3_disk_io" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Runtime Estimate (sec)</label>
+                                        <input type="number" class="form-control" name="task3_runtime_sec" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Submission Hour (0-23)</label>
+                                        <input type="number" class="form-control" name="task3_submission_hour" min="0" max="23" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Deadline (sec)</label>
+                                        <input type="number" class="form-control" name="task3_deadline_sec" min="1" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Retry Count</label>
+                                        <input type="number" class="form-control" name="task3_retry_count" min="0" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Task Size (MB)</label>
+                                        <input type="number" class="form-control" name="task3_task_size_mb" min="1" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Network Latency (ms)</label>
+                                        <input type="number" class="form-control" name="task3_network_latency" min="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calculator me-1"></i> Predict Priorities
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards Row -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-lg border-primary h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold text-primary mb-1">High Priority Tasks</div>
+                        <div class="h4">{{ tasks|selectattr('priority', 'equalto', 'High')|list|length }}</div>
+                        <div class="progress progress-sm mt-2">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: {{ (tasks|selectattr('priority', 'equalto', 'High')|list|length / tasks|length * 100)|round(1) }}%"></div>
+                        </div>
+                    </div>
+                    <div class="ms-2">
+                        <i class="fas fa-exclamation-triangle fa-2x text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-lg border-warning h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold text-warning mb-1">Medium Priority Tasks</div>
+                        <div class="h4">{{ tasks|selectattr('priority', 'equalto', 'Medium')|list|length }}</div>
+                        <div class="progress progress-sm mt-2">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: {{ (tasks|selectattr('priority', 'equalto', 'Medium')|list|length / tasks|length * 100)|round(1) }}%"></div>
+                        </div>
+                    </div>
+                    <div class="ms-2">
+                        <i class="fas fa-balance-scale fa-2x text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-lg border-success h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold text-success mb-1">Low Priority Tasks</div>
+                        <div class="h4">{{ tasks|selectattr('priority', 'equalto', 'Low')|list|length }}</div>
+                        <div class="progress progress-sm mt-2">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ (tasks|selectattr('priority', 'equalto', 'Low')|list|length / tasks|length * 100)|round(1) }}%"></div>
+                        </div>
+                    </div>
+                    <div class="ms-2">
+                        <i class="fas fa-check-circle fa-2x text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-start-lg border-info h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold text-info mb-1">Avg Confidence</div>
+                        <div class="h4">{{ "%.1f"|format((tasks|map(attribute='confidence')|sum / tasks|length * 100)|round(1)) }}%</div>
+                        <div class="progress progress-sm mt-2">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: {{ (tasks|map(attribute='confidence')|sum / tasks|length * 100)|round(1) }}%"></div>
+                        </div>
+                    </div>
+                    <div class="ms-2">
+                        <i class="fas fa-chart-line fa-2x text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <div class="card shadow h-100">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-server me-2"></i>System Resource Utilization
+                </h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow">
+                        <a class="dropdown-item" href="#"><i class="fas fa-expand me-2"></i>Fullscreen</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Download</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <img src="data:image/png;base64,{{ system_load_chart }}" class="img-fluid w-100" alt="System Load Chart">
+                </div>
+                <div class="mt-3 text-center small">
+                    <span class="me-2">
+                        <i class="fas fa-circle text-primary"></i> CPU
+                    </span>
+                    <span class="me-2">
+                        <i class="fas fa-circle text-success"></i> Memory
+                    </span>
+                    <span class="me-2">
+                        <i class="fas fa-circle text-info"></i> Network
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow h-100">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-tasks me-2"></i>Task Priority Distribution
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <img src="data:image/png;base64,{{ priority_dist_chart }}" class="img-fluid" style="max-width: 250px;" alt="Priority Distribution">
+                </div>
+                <div class="mt-4 text-center small">
+                    <div class="mb-2">
+                        <i class="fas fa-circle text-danger me-1"></i> High: {{ (tasks|selectattr('priority', 'equalto', 'High')|list|length / tasks|length * 100)|round(1) }}%
+                    </div>
+                    <div class="mb-2">
+                        <i class="fas fa-circle text-warning me-1"></i> Medium: {{ (tasks|selectattr('priority', 'equalto', 'Medium')|list|length / tasks|length * 100)|round(1) }}%
+                    </div>
+                    <div>
+                        <i class="fas fa-circle text-success me-1"></i> Low: {{ (tasks|selectattr('priority', 'equalto', 'Low')|list|length / tasks|length * 100)|round(1) }}%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Task Cards -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-list-check me-2"></i>Task Priority Analysis
+                </h6>
+                <span class="badge rounded-pill bg-primary">
+                    <i class="fas fa-bolt me-1"></i>Live Analysis
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for task in tasks %}
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card border-left-{{ 'danger' if task.priority == 'High' else 'warning' if task.priority == 'Medium' else 'success' }} shadow h-100">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-{{ 'danger' if task.priority == 'High' else 'warning' if task.priority == 'Medium' else 'success' }}">
+                                    <i class="{{ 'fas fa-fire' if task.priority == 'High' else 'fas fa-balance-scale' if task.priority == 'Medium' else 'fas fa-leaf' }} me-2"></i>
+                                    Task #{{ task.id }}
+                                </h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow">
+                                        <a class="dropdown-item" href="#"><i class="fas fa-play me-2 text-success"></i>Execute</a>
+                                        <a class="dropdown-item" href="#"><i class="fas fa-info-circle me-2 text-info"></i>Details</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#"><i class="fas fa-flag me-2 text-danger"></i>Report</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 text-center">
+                                    <img src="data:image/png;base64,{{ task.chart }}" class="img-fluid" alt="Priority Chart">
+                                </div>
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col me-2">
+                                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                                            Confidence Score
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            {{ "%.1f"|format(task.confidence * 100) }}%
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-certificate fa-2x text-{{ 'danger' if task.priority == 'High' else 'warning' if task.priority == 'Medium' else 'success' }}"></i>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="accordion" id="taskAccordion{{ task.id }}">
+                                    <div class="accordion-item border-0">
+                                        <h2 class="accordion-header" id="heading{{ task.id }}">
+                                            <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ task.id }}">
+                                                <i class="fas fa-info-circle me-2"></i> Task Details
+                                            </button>
+                                        </h2>
+                                        <div id="collapse{{ task.id }}" class="accordion-collapse collapse" data-bs-parent="#taskAccordion{{ task.id }}">
+                                            <div class="accordion-body p-0 pt-2">
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-borderless">
+                                                        <tbody>
+                                                            {% for key, value in task.raw_data.items() %}
+                                                            <tr>
+                                                                <td class="fw-bold">{{ key.replace('_', ' ') }}</td>
+                                                                <td class="text-end">
+                                                                    <span class="badge bg-gray-100 text-dark">{{ value }}</span>
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i> Generated: {{ current_time }}
+                                </small>
+                                <div>
+                                    <span class="badge bg-{{ 'danger' if task.priority == 'High' else 'warning' if task.priority == 'Medium' else 'success' }}">
+                                        <i class="fas fa-{{ 'exclamation' if task.priority == 'High' else 'minus' if task.priority == 'Medium' else 'check' }} me-1"></i>
+                                        {{ task.priority }} Priority
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Execution Order -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-list-ol me-2"></i>Suggested Execution Order
+                </h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow">
+                        <a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Export</a>
+                        <a class="dropdown-item" href="#"><i class="fas fa-print me-2"></i>Print</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Task ID</th>
+                                <th>Type</th>
+                                <th>Resource Class</th>
+                                <th>Priority</th>
+                                <th>Confidence</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <span class="badge bg-gray-100 text-dark">
+                                        <i class="fas fa-hashtag me-1"></i>{{ task.id }}
+                                    </span>
+                                </td>
+                                <td>{{ task.raw_data['Task_Type'] }}</td>
+                                <td>
+                                    <span class="badge bg-info text-white">
+                                        <i class="fas fa-server me-1"></i>{{ task.raw_data['Resource_Class'] }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if task.priority == 'High' else 'warning' if task.priority == 'Medium' else 'success' }}">
+                                        <i class="fas fa-{{ 'exclamation' if task.priority == 'High' else 'minus' if task.priority == 'Medium' else 'check' }} me-1"></i>
+                                        {{ task.priority }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-{{ 'danger' if task.priority == 'High' else 'warning' if task.priority == 'Medium' else 'success' }}" 
+                                             role="progressbar" style="width: {{ task.confidence * 100 }}%">
+                                            {{ "%.1f"|format(task.confidence * 100) }}%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">
+                                        <i class="fas fa-play me-1"></i> Run
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-question-circle me-2"></i>Dashboard Help
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-chart-line text-primary me-2"></i>Understanding the Dashboard</h5>
+                        <p>This dashboard provides real-time analysis of cloud task priorities using machine learning. The system automatically classifies tasks into High, Medium, and Low priority categories.</p>
+                        
+                        <h5 class="mt-4"><i class="fas fa-tasks text-primary me-2"></i>Task Cards</h5>
+                        <p>Each task card shows the priority classification along with a confidence score. Click "Task Details" to see more information about each task.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-list-ol text-primary me-2"></i>Execution Order</h5>
+                        <p>The suggested execution order is automatically generated based on priority and confidence scores. High priority tasks with high confidence appear first.</p>
+                        
+                        <h5 class="mt-4"><i class="fas fa-sync-alt text-primary me-2"></i>Refreshing Data</h5>
+                        <p>Click the "Refresh Dashboard" button to get the latest task analysis. The system will sample new tasks from your dataset.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">
+                    <i class="fas fa-book me-1"></i> View Full Documentation
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
